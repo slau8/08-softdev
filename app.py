@@ -10,15 +10,13 @@ import os
 
 # Create flask app and establish secret_key
 app = Flask(__name__)
-
-#encrypts cookie values
 app.secret_key = os.urandom(32)
 
 ACCOUNTS = {'tiff':'coder', 'shanlau':'baller'}
 
 # Landing page
 @app.route("/")
-def hello_world():
+def root():
     # If not logged out, redirect to welcome page
     # Else, render login page
     if 'uname' in session.keys():
@@ -27,11 +25,13 @@ def hello_world():
         return render_template('login.html', message = "")
 
 # Render login page (with error) or redirect to welcome page
-@app.route('/login')
+@app.route('/login', methods=["GET","POST"])
 def login():
-    form_dict = request.args
-    uname = form_dict['uname']
-    password = form_dict['password']
+    # Diagnostic print statements
+    testing()
+    inputs = request.args
+    uname = inputs['uname']
+    password = inputs['password']
     # Check for existing username
     if uname not in ACCOUNTS:
         return render_template('login.html', message = 'Incorrect username.')
@@ -42,7 +42,6 @@ def login():
     session['uname'] = uname
     # INSERT CODE HERE TO REDIRECT WELCOME
 
-
 # Render welcome page
 @app.route('/welcome')
 def welcome():
@@ -51,12 +50,28 @@ def welcome():
     # Note: in the template, the variable for username is 'username'
 
 # Log out procedure
-@app.route('/logout')
+@app.route('/logout', methods=["GET","POST"])
 def logout():
     # Remove username data from session
     if 'uname' in session:
         session.pop('uname')
-    return redirect(url_for('hello_world'))
+    return redirect(url_for('root'))
+
+# Checking methods and inputs
+def testing():
+    print "\n\n\n\n"
+    print "_________TESTING LOGIN INPUTS__________"
+    print "Print app:"
+    print app
+    print "Print request.method:"
+    print request.method
+    if request.method == "GET":
+        print "Print request.args:"
+        print request.args
+    else:
+        print "Print request.form:"
+        print request.form
+
 
 if __name__ == "__main__":
     app.debug = True
