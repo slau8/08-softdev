@@ -29,7 +29,7 @@ def root():
 def login():
     # Diagnostic print statements
     testing()
-    inputs = request.args
+    inputs = request.form
     uname = inputs['uname']
     password = inputs['password']
     # Check for existing username
@@ -40,15 +40,21 @@ def login():
         return render_template('login.html', message = 'Incorrect password.')
     # Add username data to session
     session['uname'] = uname
-    # INSERT CODE HERE TO REDIRECT WELCOME
+    # Redirect to welcome page
+    return redirect(url_for('welcome'))
 
 # Render welcome page
 @app.route('/welcome')
 def welcome():
-    uname = session['uname']
-    # INSERT CODE HERE TO RENDER TEMPLATE
-    # Note: in the template, the variable for username is 'username'
-
+    try:
+        #If someone is logged in, go to welcome page
+        # Note: in the template, the variable for username is 'username'
+        uname = session['uname']
+        return render_template('welcome.html', username = uname)
+    except:
+        #If not, go back to login
+        return render_template('login.html', message = 'Whoops! You forgot to log in!')
+        
 # Log out procedure
 @app.route('/logout', methods=["GET","POST"])
 def logout():
