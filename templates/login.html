@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Login</title>
+    <title>{% block title %} Login {% endblock %}</title>
   </head>
   <body>
-    <h1>Log In</h1>
+    <h1>{% block header %} Log In {% endblock %}</h1>
+    {% block content %} 
     <p style="color:red;">
       {{ message }}
     </p>
@@ -13,5 +14,6 @@
       <input type="password" name="password" placeholder="Password" required><br>
       <input type="submit" value="Let's go!">
     </form>
+    {% endblock %}
   </body>
 </html>

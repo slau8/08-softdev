@@ -1,16 +1,17 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Welcome</title>
-  </head>
-  <body>
-    <h1>Welcome, {{ username }}.</h1>
-    <p>
+{% extends "login.html" %}
+{% block title %}
+Welcome
+{% endblock %}
+{% block header %}
+Welcome, {{ username }}.
+{% endblock %}
+{% block content %}
+<p>
       Hello {{ username }}.
     </p>
     <form action="/logout">
       <p>
         <input type="submit" value="Log Out">
       </p>
-  </body>
-</html>
+    </form>
+{% endblock %}
