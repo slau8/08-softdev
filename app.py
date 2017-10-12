@@ -5,7 +5,7 @@ HW #08: Do I Know You?
 2017-10-6
 '''
 
-from flask import Flask, render_template, redirect, url_for, session, request
+from flask import Flask, render_template, redirect, url_for, session, request, flash
 import os
 
 # Create flask app and establish secret_key
@@ -22,7 +22,7 @@ def root():
     if 'uname' in session.keys():
         return redirect(url_for('welcome'))
     else:
-        return render_template('login.html', message = "")
+        return render_template('login.html')
 
 # Render login page (with error) or redirect to welcome page
 @app.route('/login', methods=["GET","POST"])
@@ -34,10 +34,12 @@ def login():
     password = inputs['password']
     # Check for existing username
     if uname not in ACCOUNTS:
-        return render_template('login.html', message = 'Incorrect username.')
+        flash('Incorrect username.')
+        return render_template('login.html')
     # Check for valid password
     if ACCOUNTS[uname] != password:
-        return render_template('login.html', message = 'Incorrect password.')
+        flash('Incorrect password.')
+        return render_template('login.html')
     # Add username data to session
     session['uname'] = uname
     # Redirect to welcome page
@@ -50,10 +52,12 @@ def welcome():
         #If someone is logged in, go to welcome page
         # Note: in the template, the variable for username is 'username'
         uname = session['uname']
+        flash('You have successfully logged in!')
         return render_template('welcome.html', username = uname)
     except:
         #If not, go back to login
-        return render_template('login.html', message = 'Whoops! You forgot to log in!')
+        flash( 'Whoops! You forgot to log in!')
+        return render_template('login.html')
         
 # Log out procedure
 @app.route('/logout', methods=["GET","POST"])
@@ -61,6 +65,7 @@ def logout():
     # Remove username data from session
     if 'uname' in session:
         session.pop('uname')
+    flash("You have successfully logged out!")
     return redirect(url_for('root'))
 
 # Checking methods and inputs
